@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>NABGHA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+
+/* تنسيق سهم السابق فقط */
+.nav-arrows-container {
+    display: flex;
+    justify-content: flex-end; 
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+}
+.nav-arrow-btn {
+    background: white;
+    color: #4f46e5;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+.nav-arrow-btn:hover { transform: scale(1.1); }
+
+/* واجهة الترحيب */
+.intro-screen{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(135deg,#4f46e5,#9fc7f5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    color:white;
+}
+
+.intro-box{
+    text-align:center;
+    max-width:500px;
+    padding:30px;
+    animation:fadeInUp 1.2s ease;
+}
+
+.intro-box h1{
+    font-size:36px;
+    margin-bottom:10px;
+}
+
+.intro-sub{
+    font-size:18px;
+    margin-bottom:20px;
+    opacity:0.9;
+}
+
+.intro-features{
+    list-style:none;
+    padding:0;
+    margin:20px 0;
+}
+
+.intro-features li{
+    margin:8px 0;
+    font-size:16px;
+}
+
+.intro-btn{
+    margin-top:20px;
+    font-size:18px;
+    padding:14px 30px;
+    border-radius:30px;
+    background:white;
+    color:#4f46e5;
+    font-weight:bold;
+    border: none;
+    cursor: pointer;
+}
+
+@keyframes fadeInUp{
+    from{opacity:0; transform:translateY(40px);}
+    to{opacity:1; transform:translateY(0);}
+}
+body{
+    margin:0;
+    font-family:'Cairo',sans-serif;
+    background: linear-gradient(135deg,#667eea,#9fc7f5);
+    background-attachment: fixed;
+    background-size: cover;
+    color: #333;
+    min-height: 100vh;
+}
+.hidden{display:none;}
+header{
+    padding:10px 30px 30px 30px;
+    color:white;
+    text-align:center;
+    background: transparent;
+}
+h1,h2{margin:0 0 15px 0;}
+button{
+    border:none;
+    border-radius:12px;
+    padding:10px 18px;
+    background:linear-gradient(135deg,#4f46e5,#9fc7f5);
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{opacity:0.85;}
+button:disabled{opacity:0.5; cursor:not-allowed;}
+input{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+    width:90%;
+    display: block;
+    margin: 0 auto 10px auto;
+    text-align: right;
+}
+.container{
+    width:95%;
+    max-width:750px;
+    background:#fff;
+    margin:20px auto;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    direction: rtl;
+    text-align: right;
+}
+.schedule-card{
+    background:#fdfdfd;
+    border-radius:15px;
+    padding:15px;
+    margin:15px 0;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+.subject{font-weight:bold;font-size:18px; margin-bottom:8px;}
+.task-column{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:6px;
+    margin-top:8px;
+}
+.task-column label {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f0f4ff;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.task-column label:hover {
+    background: #e0e7ff;
+}
+.progress-box{margin-top:10px;}
+.progress-text{font-size:13px; margin-bottom:4px;}
+.progress-bar{width:100%; height:8px; background:#ddd; border-radius:10px; overflow:hidden;}
+.progress-fill{height:100%; width:0%; background:linear-gradient(135deg,#4f46e5,#f7b4f1); transition:width .3s;}
+.motivation{
+    background:#fef3c7;
+    padding:12px;
+    border-radius:10px;
+    margin-top:15px;
+    font-weight:bold;
+    text-align:center;
+    font-size:15px;
+}
+.select-btn{
+    width:100%;
+    margin:6px 0;
+    padding:12px;
+}
+.logout{
+    background:transparent;
+    border:1px solid white;
+    color:white;
+    padding:6px 14px;
+    border-radius:20px;
+    margin-top:10px;
+}
+.subject-input{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+.subject-input label{font-weight:bold;}
+.subject-input input{
+    width: 60px;
+    padding: 6px;
+    margin: 0;
+    text-align: center;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:center;
+}
+th{background:#eef2ff;}
+.stopwatch{
+    font-weight:bold;
+    font-size:16px;
+    text-align:center;
+    margin:5px 0;
+}
+
+#login button {
+    display: block;
+    margin-right: 0; 
+    margin-left: auto;
+}
+
+#prayerPage {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+</style>
+</head>
+<body>
+
+<div id="navArrows" class="nav-arrows-container hidden">
+    <button class="nav-arrow-btn" onclick="customPrev()">➔</button>
+</div>
+
+<nav style="text-align: center;">
+    <img src="Salma-Hana.png" alt="logo" style="width: 150px; height: auto; margin: 20px auto 0 auto; display: block;">
+</nav>
+
+<div id="intro" class="intro-screen">
+  <div class="intro-box">
+    <h1>NABGHA</h1>
+    <p class="intro-sub">
+      مشروع ذكاء اصطناعي ينظم وقت الطالب  
+      ويحوّل المذاكرة لإنجاز حقيقي
+    </p>
+
+    <ul class="intro-features">
+      <li> تحليل ذكي للمستوى</li>
+      <li> تنظيم وقت المذاكره</li>
+      <li> خطة دراسية تفاعلية</li>
+      <li> تحفيز ومتابعة مستمرة</li>
+    </ul>
+
+    <button class="intro-btn" onclick="startProject()">
+       ابدأ الرحلة
+    </button>
+  </div>
+</div>
+
+<header>
+<h1>NABGHA</h1>
+<p id="welcome">ذكاء اصطناعي ينظم وقتك</p>
+<button class="logout hidden" onclick="logout()">تسجيل خروج</button>
+</header>
+
+<div class="container" id="login">
+<h2>اسمك ايه؟</h2>
+<input id="username" placeholder="اسمك بالعربي">
+<br><br>
+<button onclick="goGrade()">التالي </button>
+</div>
+
+<div class="container hidden" id="grade">
+<h2>اختار سنتك</h2>
+<button class="select-btn" onclick="choose('اولى ثانوي')">أولى ثانوي</button>
+<button class="select-btn" onclick="choose('تانية علمي')">تانية علمي</button>
+<button class="select-btn" onclick="choose('تانية ادبي')">تانية أدبي</button>
+<button class="select-btn" onclick="choose('تالتة علوم')">تالتة علوم</button>
+<button class="select-btn" onclick="choose('تالتة رياضة')">تالتة رياضة</button>
+<button class="select-btn" onclick="choose('تالتة ادبي')">تالتة أدبي</button>
+</div>
+
+<div class="container hidden" id="grades">
+<h2>أدخل درجاتك لكل مادة</h2>
+<div id="gradeInputs"></div>
+<button onclick="runAI()">إنشاء خطة المذاكرة الذكية</button>
+<div id="result"></div>
+</div>
+
+<div class="container hidden" id="results">
+<h2> المذكرة التفاعلي</h2>
+<div id="schedule"></div>
+
+<h2> تحليل الذكاء الاصطناعي</h2>
+<div id="aiTable"></div>
+
+<h2> جدول أسبوعي مستقل</h2>
+<div id="weeklyTable"></div>
+</div>
+
+<audio id="doneSound">
+ <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg">
+</audio>
+
+<div id="surpriseBtnContainer" class="container hidden" style="text-align: center;">
+    <button onclick="showPrayerPage()" style="background: linear-gradient(135deg,#4f46e5,#f7b4f1); color: #e0e7ff;">
+         مفاجأة مستنياك
+    </button>
+</div>
+
+<div class="container hidden" id="prayerPage">
+    <h2 style="text-align: center;"> جدول الصلاة اليومي</h2>
+    <p style="text-align: center; color: #666;">"الصلاة نور، حافظ عليها لزيادة البركة في وقتك"</p>
+    
+    <div class="task-column" style="grid-template-columns: 1fr; margin-top: 20px;">
+        <label><input type="checkbox"> صلاة الفجر</label>
+        <label><input type="checkbox"> صلاة الظهر</label>
+        <label><input type="checkbox"> صلاة العصر</label>
+        <label><input type="checkbox"> صلاة المغرب</label>
+        <label><input type="checkbox"> صلاة العشاء</label>
+    </div>
+    
+    <button class="select-btn" style="margin-top: 20px;" onclick="location.reload()">إعادة ضبط اليوم 🔄</button>
+</div>
+
+<script>
+let subjects=[], state={}, active=null, timers={}, userGrade="";
+let currentVisibleSection = "login";
+
+const curriculum={
+ "اولى ثانوي":["اللغة العربية","اللغة الإنجليزية","الرياضيات","العلوم","التاريخ","الفلسفة"],
+ "تانية علمي":["اللغة العربية","اللغة الإنجليزية","الرياضيات","الفيزياء","الكيمياء","تاريخ"],
+ "تانية ادبي":["اللغة العربية","اللغة الإنجليزية","التاريخ","الجغرافيا","علم النفس","فلسفه"],
+ "تالتة علوم":["اللغة العربية","اللغة الإنجليزية","الأحياء","الفيزياء","الكيمياء"],
+ "تالتة رياضة":["اللغة العربية","اللغة الإنجليزية","الرياضيات","الفيزياء","الكيمياء"],
+ "تالتة ادبي":["اللغة العربية","اللغة الإنجليزية","التاريخ","الجغرافيا","الإحصاء"]
+};
+
+function updateNavVisibility(sectionId) {
+    currentVisibleSection = sectionId;
+    // التعديل هنا: يظهر السهم فقط في أقسام الدرجات، النتائج، أو صفحة الصلاة
+    if(sectionId === "grades" || sectionId === "results" || sectionId === "prayerPage") {
+        document.getElementById("navArrows").classList.remove("hidden");
+    } else {
+        document.getElementById("navArrows").classList.add("hidden");
+    }
+}
+
+function customPrev() {
+    if(currentVisibleSection === "grades") {
+        document.getElementById("grades").classList.add("hidden");
+        document.getElementById("grade").classList.remove("hidden");
+        updateNavVisibility("grade");
+    } else if(currentVisibleSection === "results") {
+        document.getElementById("results").classList.add("hidden");
+        document.getElementById("grades").classList.remove("hidden");
+        updateNavVisibility("grades");
+    } else if(currentVisibleSection === "prayerPage") {
+        document.getElementById("prayerPage").classList.add("hidden");
+        document.getElementById("results").classList.remove("hidden");
+        updateNavVisibility("results");
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function goGrade(){
+ let name = document.getElementById("username").value.trim();
+ if(name === "") {
+     alert("من فضلك أدخل اسمك");
+     return;
+ }
+ localStorage.setItem("studyUser", name);
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("grade").classList.remove("hidden");
+ updateNavVisibility("grade"); // سيظل السهم مخفياً هنا
+ document.querySelector(".logout").classList.remove("hidden");
+ document.getElementById("welcome").innerText = "أهلاً يا " + name ;
+}
+
+function choose(g){
+ userGrade=g;
+ subjects=curriculum[g];
+ localStorage.setItem("userGrade", g);
+ document.getElementById("grade").classList.add("hidden");
+ document.getElementById("grades").classList.remove("hidden");
+ updateNavVisibility("grades"); // هنا سيبدأ السهم بالظهور
+
+ let html="";
+ subjects.forEach(sub=>{
+   let savedVal = localStorage.getItem("grade-"+sub) || "";
+   html+=`<div class="subject-input"><label>${sub}</label><input type="number" id="grade-${sub}" min="0" max="100" placeholder="0-100" value="${savedVal}"></div>`;
+ });
+ document.getElementById("gradeInputs").innerHTML=html;
+}
+
+function runAI(){
+ let plan=[], message="";
+ subjects.forEach(sub=>{
+   let val=document.getElementById("grade-"+sub).value;
+   if(val==="") val=0;
+   val=parseInt(val);
+   localStorage.setItem("grade-"+sub, val);
+   let level="قوي", hours=1;
+   if(val<50){level="ضعيف"; hours=3;}
+   else if(val<70){level="متوسط"; hours=2;}
+   plan.push({name:sub,score:val,level,hours});
+   document.getElementById("surpriseBtnContainer").classList.remove("hidden");
+ });
+
+ let weakCount=plan.filter(p=>p.level==="ضعيف").length;
+ if(weakCount>=3) message=" البداية الصعبة تصنع المتفوقين!";
+ else if(weakCount>=1) message=" مستواك كويس، شوية التزام وهتوصل للقمة!";
+ else message=" ممتاز! حافظ على مستواك!";
+
+ let aiHTML=`<table><tr><th>المادة</th><th>الدرجة</th><th>المستوى</th><th>ساعات يومية</th></tr>`;
+ plan.forEach(p=>{
+   aiHTML+=`<tr><td>${p.name}</td><td>${p.score}</td><td>${p.level}</td><td>${p.hours}</td></tr>`;
+ });
+ aiHTML+="</table>";
+ document.getElementById("aiTable").innerHTML=aiHTML;
+
+ document.getElementById("grades").classList.add("hidden");
+ document.getElementById("results").classList.remove("hidden");
+ updateNavVisibility("results");
+ 
+ document.getElementById("schedule").innerHTML="";
+ plan.forEach(p=>{
+   state[p.name]={remain:p.hours*60*60,running:false};
+   let html=`<div class="schedule-card">
+      <div class="subject">📘 ${p.name}</div>
+      <button id="btn-${p.name}" onclick="toggle('${p.name}')"> ابدأ</button>
+      <div class="stopwatch" id="time-${p.name}">${p.hours}:00:00</div>
+      <div class="task-column">
+        <label><input type="checkbox" onchange="updateProgress('${p.name}')"> فهم الدرس</label>
+        <label><input type="checkbox" onchange="updateProgress('${p.name}')"> حل الأسئلة</label>
+        <label><input type="checkbox" onchange="updateProgress('${p.name}')"> تلخيص</label>
+        <label><input type="checkbox" onchange="updateProgress('${p.name}')"> مراجعة</label>
+      </div>
+      <div class="progress-box">
+        <div class="progress-text">نسبة الإنجاز: <span id="percent-${p.name}">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="bar-${p.name}"></div></div>
+      </div>
+    </div>`;
+   document.getElementById("schedule").innerHTML+=html;
+ });
+document.getElementById("schedule").innerHTML+=`<div class="motivation">${message}</div>`;
+
+generateWeeklyTable(plan);
+confetti({particleCount:120,spread:120});
+}
+
+function generateWeeklyTable(plan){
+ let days=["السبت","الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس"];
+ let table=`<table><tr><th>اليوم</th>`;
+ plan.forEach(p=>table+=`<th>${p.name}</th>`);
+ table+=`</tr>`;
+ days.forEach(day=>{
+   table+=`<tr><td>${day}</td>`;
+   plan.forEach(p=>table+=`<td>${p.hours} ساعة</td>`);
+   table+=`</tr>`;
+ });
+ table+=`</table>`;
+ document.getElementById("weeklyTable").innerHTML=table;
+}
+
+function updateProgress(sub){
+ let card=[...document.querySelectorAll(".schedule-card")].find(c=>c.querySelector(".subject").innerText.includes(sub));
+ let checks=card.querySelectorAll("input[type=checkbox]");
+ let done=[...checks].filter(c=>c.checked).length;
+ let percent=done*25;
+ document.getElementById("percent-"+sub).innerText=percent+"%";
+ document.getElementById("bar-"+sub).style.width=percent+"%";
+ if(percent===100){document.getElementById("doneSound").play(); confetti({particleCount:180,spread:120});}
+}
+
+function toggle(sub){
+ if(active && active!==sub) stop(active);
+ let st=state[sub];
+ let btn=document.getElementById("btn-"+sub);
+ if(st.running){
+   stop(sub);
+   btn.innerText=" ابدأ";
+ }else{
+   active=sub;
+   st.running=true;
+   btn.innerText=" إيقاف";
+   timers[sub]=setInterval(()=>{
+     if(st.remain<=0){finish(sub); return;}
+     st.remain--;
+     let h=Math.floor(st.remain/3600);
+     let m=Math.floor((st.remain%3600)/60);
+     let s=st.remain%60;
+     document.getElementById("time-"+sub).innerText=`${h}:${m<10?"0"+m:m}:${s<10?"0"+s:s}`;
+   },1000);
+ }
+}
+
+function stop(sub){
+ clearInterval(timers[sub]);
+ state[sub].running=false;
+ active=null;
+ let btn=document.getElementById("btn-"+sub);
+ if(btn) btn.innerText=" ابدأ";
+}
+
+function finish(sub){
+ clearInterval(timers[sub]);
+ active=null;
+ document.getElementById("time-"+sub).innerText=" خلصت";
+ document.getElementById("doneSound").play();
+ confetti({particleCount:220,spread:120});
+}
+
+function logout(){
+ localStorage.clear();
+ location.reload();
+}
+
+window.onload = () => {
+ let storedUser = localStorage.getItem("studyUser");
+ let storedGrade = localStorage.getItem("userGrade");
+ if(storedUser) {
+     document.getElementById("username").value = storedUser;
+     document.getElementById("welcome").innerText = "أهلاً يا " + storedUser;
+     document.getElementById("login").classList.add("hidden");
+     if(storedGrade) {
+         choose(storedGrade); 
+     } else {
+         document.getElementById("grade").classList.remove("hidden");
+         updateNavVisibility("grade");
+     }
+     document.querySelector(".logout").classList.remove("hidden");
+ } else {
+     document.getElementById("navArrows").classList.add("hidden");
+ }
+}
+
+function startProject(){
+  document.getElementById("intro").style.display="none";
+  updateNavVisibility(currentVisibleSection);
+}
+
+function showPrayerPage() {
+    document.getElementById("results").classList.add("hidden");
+    document.getElementById("surpriseBtnContainer").classList.add("hidden");
+    document.getElementById("prayerPage").classList.remove("hidden");
+    updateNavVisibility("prayerPage");
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    confetti({particleCount: 150, spread: 70, origin: { y: 0.6 }});
+}
+</script>
+
+</body>
+</html>
